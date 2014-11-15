@@ -92,17 +92,30 @@ for i in xrange(link_count):
     else:
         world_adj_list[zone2].append(zone1)
 
+continents = {}
+for zone in world_adj_list:
+    if zone not in continents:
+        actual_continent = len(continents)
+        def dfs(zone):
+            continents[zone] = actual_continent
+            for next_zone in world_adj_list[zone]:
+                if next_zone not in continents:
+                    dfs(next_zone)
+
+
 # game loop
 while 1:
     platinum = int(raw_input()) # my available Platinum
     world_state = {}
 
-
+    # reading the actual game state
     for i in xrange(zone_count):
         zone_id, owner_id, num_pods_P0, num_pods_P1, num_pods_P2, num_pods_P3 = [int(i) for i in raw_input().split()]
         world_state[zone_id] = dict(owner=owner_id, pods=[num_pods_P0, num_pods_P1, num_pods_P2, num_pods_P3])
 
-    # call the other file
+
+
+    # call evaluation
     evaluations = evaluate(world_state, platinum_production, world_adj_list, my_id)
 
     # moving phase
