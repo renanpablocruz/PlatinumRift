@@ -1,7 +1,5 @@
 import sys, math, operator
 
-#ola mundo
-
 # Auto-generated code below aims at helping you parse
 # the standard input according to the problem statement.
 
@@ -61,16 +59,16 @@ while 1:
         for neighboor in graph[zId]:
             for j in xrange(playerCount):
                 if j != myId:
-                    num_enemies_close += world_state[neighboor][j+1] 
+                    num_enemies_close += world_state[neighboor][j+1]
 
         evaluation +=  -1*num_enemies_close
         evaluation += -2*world_state[zId][myId+1]
 
         evaluations[zId] = evaluation
-    
+
     # Write an action using print
     # To debug: print >> sys.stderr, "Debug messages..."
-    
+
     # moving phase
     moving = ""
     for zone in my_zones:
@@ -85,7 +83,7 @@ while 1:
         print "WAIT"
     else:
         print moving
-    
+
     placing = ""
     sorted_eval = sorted(evaluations.items(), key=operator.itemgetter(1))
     while len(sorted_eval)>0 and platinum >= 20:
