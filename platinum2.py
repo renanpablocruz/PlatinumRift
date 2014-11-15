@@ -62,7 +62,7 @@ def evaluate(world_state, platinum_production, world_adj_list, my_id):
         for zone in evaluations:
             new_eval[zone] = evaluations[zone]
             for close_zone in world_adj_list[zone]:
-                new_eval[zone] += evaluations[close_zone]/len(world_adj_list[zone])
+                new_eval[zone] += evaluations[close_zone]/len(world_adj_list[zone])/2
         del evaluations
         evaluations = new_eval
     return evaluations
@@ -101,18 +101,23 @@ for zone in world_adj_list:
             for next_zone in world_adj_list[zone]:
                 if next_zone not in continents:
                     dfs(next_zone)
-
+        dfs(zone)
+num_continents = len(continents)-1
 
 # game loop
 while 1:
     platinum = int(raw_input()) # my available Platinum
     world_state = {}
 
+
+    dominated = [True]*num_continents
     # reading the actual game state
     for i in xrange(zone_count):
         zone_id, owner_id, num_pods_P0, num_pods_P1, num_pods_P2, num_pods_P3 = [int(i) for i in raw_input().split()]
         world_state[zone_id] = dict(owner=owner_id, pods=[num_pods_P0, num_pods_P1, num_pods_P2, num_pods_P3])
-
+        if owner_id != my_id:
+            continent = continents[zone_id]
+            dominated[continent] = False
 
 
     # call evaluation
@@ -140,7 +145,7 @@ while 1:
     print >> sys.stderr, sorted_eval
     while len(sorted_eval)>0 and platinum >= 20:
         placing_zone = sorted_eval.pop()[0]
-        if world_state[placing_zone]["owner"] in (-1, my_id):
+        if world_state[placing_zone]["owner"] in (-1, my_id) and not dominated[continents[placing_zone]]:
             platinum -= 20
             placing += "1 "+str(placing_zone)+" "
     if placing != "":
